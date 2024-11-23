@@ -1,0 +1,37 @@
+name: Module20Workflow
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Use Node.js 21.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 21.x
+
+      - name: MongoDB in GitHub Actions
+        uses: supercharge/mongodb-github-action@1.11.0
+        with: 
+          mongodb-version: 8.0
+      
+      - name: 🧰 Install Deps
+        run: npm install
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Run Tests
+        uses: cypress-io/github-action@v6.7.7
+        with: 
+          build: npm run build
+          start: npm run start
+          wait-on: "http://localhost:3001"
+          component: true
